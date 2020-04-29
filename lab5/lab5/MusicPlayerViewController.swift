@@ -12,9 +12,10 @@ import AVFoundation
 
 class MusicPlayerViewController: UIViewController {
 
+    var play: Bool!
     override func viewDidLoad() {
         super.viewDidLoad()
-        player?.play()
+        play = true
         // Do any additional setup after loading the view.
     }
     
@@ -25,15 +26,15 @@ class MusicPlayerViewController: UIViewController {
     var previewURL: URL!
     var player: AVPlayer?
     
-    var track: Track! {
-        didSet {
-            self.name.text = track.trackName
-            self.previewURL = track.previewUrl
-        }
-    }
-    
     @IBAction func playOrPause(_ sender: Any) {
-        var play: Bool = false
+        
+        let playerItem: AVPlayerItem
+        
+        playerItem = .init(url: self.previewURL)
+
+        self.player = AVPlayer(playerItem: playerItem)
+        player?.volume = 1.0
+        
         if !play {
             player?.pause()
             play = true
@@ -42,27 +43,12 @@ class MusicPlayerViewController: UIViewController {
             play = false
         }
      }
+    
     @IBAction func close(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
+        
     }
     
     
 
-}
-
-extension MusicPlayerViewController: TrackTableViewCellDelegate {
-    
-    func didPressPlay(track: Track) {
-        MusicService.shared.play(track: track)
-    }
-    
-    func didPressDownload(track: Track, completion: @escaping (Track) -> ()) {
-        MusicService.shared.download(track: track) { url, error in
-            if let url = url {
-                completion(track)
-            } else if let error = error {
-                print(error)
-            }
-        }
-    }
-    
 }

@@ -121,9 +121,9 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
         
         if item.pathExtension == "m4a" {
             let name = item.lastPathComponent
-            print (name)
             if let vc = storyboard?.instantiateViewController(identifier: "MusicPlayerVC") as? MusicPlayerViewController {
-                vc.name.text = name
+                vc.previewURL = item
+                vc.name?.text = name
                 navigationController?.pushViewController(vc, animated: true)
             }
         } else {
